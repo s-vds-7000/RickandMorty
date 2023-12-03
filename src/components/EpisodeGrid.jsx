@@ -4,10 +4,12 @@ import { Grid, Card, CardContent, Typography, TextField, Button, Box } from '@mu
 import SearchIcon from '@mui/icons-material/Search';
 
 const EpisodesGrid = () => {
+  // State variables
   const [episodes, setEpisodes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [charactersByEpisode, setCharactersByEpisode] = useState({});
 
+  // Fetch episodes on component mount
   useEffect(() => {
     axios.get('https://rickandmortyapi.com/api/episode')
       .then(response => {
@@ -18,10 +20,12 @@ const EpisodesGrid = () => {
       });
   }, []);
 
+  // Handle search input change
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  // Handle search submission
   const handleSearchSubmit = () => {
     axios.get(`https://rickandmortyapi.com/api/episode/?name=${searchTerm}`)
       .then(response => {
@@ -32,6 +36,7 @@ const EpisodesGrid = () => {
       });
   };
 
+  // Fetch characters for a specific episode
   const handleShowCharacters = (episode) => {
     const characterIds = episode.characters.map(character => character.split('/').pop());
     axios.all(characterIds.map(characterId => axios.get(`https://rickandmortyapi.com/api/character/${characterId}`)))
@@ -44,11 +49,12 @@ const EpisodesGrid = () => {
       });
   };
 
+  // Reset characters displayed for episodes
   const resetCharacters = () => {
     setCharactersByEpisode({});
   };
 
-  // Function to render characters with styled boxes
+  // Render characters with styled boxes
   const renderCharacters = (characters) => {
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -70,9 +76,12 @@ const EpisodesGrid = () => {
 
   return (
     <div>
+      {/* Title */}
       <Typography variant="h2" align="center" style={{ margin: '20px 0' }}>
         Episodes
       </Typography>
+
+      {/* Search bar */}
       <Box display="flex" justifyContent="center" alignItems="center" marginBottom="20px">
         <TextField
           label="Search by Episode Name"
@@ -88,11 +97,14 @@ const EpisodesGrid = () => {
           }}
         />
       </Box>
+
+      {/* Episodes grid */}
       <Grid container spacing={3}>
         {episodes.map(episode => (
           <Grid item xs={12} sm={6} md={4} key={episode.id}>
             <Card>
               <CardContent>
+                {/* Episode details */}
                 <Typography variant="h5" component="h2" textAlign="center">
                   {episode.name}
                 </Typography>
@@ -102,11 +114,14 @@ const EpisodesGrid = () => {
                 <Typography variant="body2" color="textSecondary" component="p" textAlign="center">
                   Air Date: {episode.air_date}
                 </Typography>
+
+                {/* Button to show characters */}
                 <Box display="flex" justifyContent="center" alignItems="center" p={2}>
-                <Button variant="contained" onClick={() => handleShowCharacters(episode)}>
-                  Show Characters
-                </Button>
+                  <Button variant="contained" onClick={() => handleShowCharacters(episode)}>
+                    Show Characters
+                  </Button>
                 </Box>
+
                 {/* Display characters related to the episode */}
                 {charactersByEpisode[episode.id] && (
                   <div>

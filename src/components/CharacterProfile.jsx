@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
+// Styled components for UI elements
 const StyledCard = styled(Card)({
   maxWidth: '600px',
   margin: '0 auto',
@@ -30,7 +31,7 @@ const EpisodeBox = styled(Box)({
   padding: '8px 12px',
   borderRadius: '4px',
   margin: '4px',
-  display: 'inline-block', 
+  display: 'inline-block',
 });
 
 const ImageWithBorder = styled('img')({
@@ -43,6 +44,7 @@ const ImageWithBorder = styled('img')({
 
 const CharacterProfile = () => {
   const { id } = useParams();
+  // State variables for character details
   const [character, setCharacter] = useState(null);
   const [origin, setOrigin] = useState(null);
   const [location, setLocation] = useState(null);
@@ -50,17 +52,22 @@ const CharacterProfile = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Fetch character details when the ID changes
     const fetchCharacterDetails = async () => {
       try {
+        // Fetch character information
         const characterResponse = await axios.get(`https://rickandmortyapi.com/api/character/${id}`);
         setCharacter(characterResponse.data);
 
+        // Fetch origin information
         const originResponse = await axios.get(characterResponse.data.origin.url);
         setOrigin(originResponse.data);
 
+        // Fetch location information
         const locationResponse = await axios.get(characterResponse.data.location.url);
         setLocation(locationResponse.data);
 
+        // Fetch episodes information
         const episodesResponse = await Promise.all(characterResponse.data.episode.map(episodeUrl =>
           axios.get(episodeUrl)
         ));
@@ -80,23 +87,28 @@ const CharacterProfile = () => {
       {character && origin && location && (
         <StyledCard>
           <CardContent>
-          <CenteredContent>
-          <Typography variant="h3" component="h1" style={{ color: '#3f51b5', fontFamily: 'Arial, sans-serif' }}>
-          {character.name}
-      </Typography>
-            
-      <ImageWithBorder
+            <CenteredContent>
+              {/* Display character name */}
+              <Typography variant="h3" component="h1" style={{ color: '#3f51b5', fontFamily: 'Arial, sans-serif' }}>
+                {character.name}
+              </Typography>
+
+              {/* Display character image */}
+              <ImageWithBorder
                 src={character.image}
                 alt={character.name}
               />
-            <Typography variant="body2" color="textSecondary" component="p">
-              Species: {character.species}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Gender: {character.gender}
-            </Typography>
-            {/* Display episode names */}
-            <Typography variant="h6" component="h3">
+
+              {/* Display character details */}
+              <Typography variant="body2" color="textSecondary" component="p">
+                Species: {character.species}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Gender: {character.gender}
+              </Typography>
+
+              {/* Display episode names */}
+              <Typography variant="h6" component="h3">
                 Episodes:
               </Typography>
               <Box>
@@ -105,30 +117,33 @@ const CharacterProfile = () => {
                 ))}
               </Box>
 
-            {/* Display origin and location details */}
-            <Typography variant="h6" component="h3">
-              Origin:
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Name: {origin.name}
-            </Typography>
-            {/* Display other origin details */}
-            <Typography variant="h6" component="h3">
-              Location:
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Name: {location.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Dimension: {location.dimension}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Residents: {location.residents.length}
-            </Typography>
+              {/* Display origin and location details */}
+              <Typography variant="h6" component="h3">
+                Origin:
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Name: {origin.name}
+              </Typography>
+
+              {/* Display location details */}
+              <Typography variant="h6" component="h3">
+                Location:
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Name: {location.name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Dimension: {location.dimension}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Residents: {location.residents.length}
+              </Typography>
             </CenteredContent>
           </CardContent>
         </StyledCard>
       )}
+
+      {/* Display error message if there's an error */}
       {error && (
         <Typography variant="body2" color="error" component="p">
           {error}
