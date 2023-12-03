@@ -13,7 +13,6 @@ function App() {
         <Route path="/character/:id" element={<CharacterProfile/>} />
         <Route path="/locations" element={<LocationGrid/>} />
         <Route path="/episodes" element={<EpisodeGrid/>} />
-        {/* Add routes for search and filters */}
       </Routes>
     </Router>
   );

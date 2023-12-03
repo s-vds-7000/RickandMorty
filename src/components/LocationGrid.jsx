@@ -1,7 +1,7 @@
-// LocationGrid.js (Updated for individual character display per location)
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Grid, Card, CardContent, Typography, TextField, Button } from '@mui/material';
+import { Grid, Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const LocationGrid = () => {
   const [locations, setLocations] = useState([]);
@@ -50,47 +50,67 @@ const LocationGrid = () => {
 
   return (
     <div>
-      <TextField
-        label="Search by Location Name"
-        variant="outlined"
-        value={searchTerm}
-        onChange={handleSearch}
-        onKeyPress={(event) => {
-          if (event.key === 'Enter') {
-            handleSearchSubmit();
-          }
-        }}
-      />
+      <Typography variant="h3" align="center" gutterBottom>
+        Locations
+      </Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" marginBottom={2}>
+        <TextField
+          label="Search by Location Name"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearch}
+          InputProps={{
+            endAdornment: (
+              <Button variant="contained" onClick={handleSearchSubmit}>
+                <SearchIcon />
+              </Button>
+            ),
+          }}
+        />
+        
+      </Box>
       <Grid container spacing={3}>
         {locations.map(location => (
           <Grid item xs={12} sm={6} md={4} key={location.id}>
             <Card>
               <CardContent>
-                <Typography variant="h5" component="h2">
+                <Typography variant="h5" component="h2" textAlign="center">
                   {location.name}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" textAlign="center">
                   Type: {location.type}
                 </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center" p={2}>
                 <Button variant="contained" onClick={() => handleShowCharacters(location)}>
                   Show Characters
                 </Button>
+                </Box>
                 {/* Display characters related to the location */}
                 {charactersByLocation[location.id] && (
-                  <div>
-                    <Typography variant="h6" component="h3">
-                      Characters in this Location:
-                    </Typography>
-                    {charactersByLocation[location.id].map((character, index) => (
-                      <Typography variant="body2" color="textSecondary" component="p" key={index}>
-                        {character.name}
-                      </Typography>
-                    ))}
-                    <Button variant="outlined" onClick={resetCharacters}>
-                      Hide Characters
-                    </Button>
-                  </div>
-                )}
+  <div>
+    <Typography variant="h6" component="h3">
+      Characters in this Location:
+    </Typography>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+      {charactersByLocation[location.id].map((character, index) => (
+        <div
+          key={index}
+          style={{
+            background: '#757575',
+            padding: '8px 12px',
+            borderRadius: '5px',
+            color: 'white',
+          }}
+        >
+          {character.name}
+        </div>
+      ))}
+    </div>
+    <Button variant="outlined" onClick={resetCharacters} sx={{ m: '8px'}}>
+      Hide Characters
+    </Button>
+  </div>
+)}
               </CardContent>
             </Card>
           </Grid>

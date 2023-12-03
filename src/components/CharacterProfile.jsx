@@ -1,7 +1,45 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+
+const StyledCard = styled(Card)({
+  maxWidth: '600px',
+  margin: '0 auto',
+  marginTop: '20px',
+  padding: '0 50px',
+  boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  transition: '0.3s',
+  borderRadius: '10px',
+  '&:hover': {
+    boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+  },
+});
+
+const CenteredContent = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  textAlign: 'center',
+});
+
+const EpisodeBox = styled(Box)({
+  backgroundColor: '#757575',
+  color: '#fff',
+  padding: '8px 12px',
+  borderRadius: '4px',
+  margin: '4px',
+  display: 'inline-block', 
+});
+
+const ImageWithBorder = styled('img')({
+  maxHeight: '200px',
+  maxWidth: '100%',
+  marginBottom: '12px',
+  border: '2px solid #ccc', // Add border to the image
+  borderRadius: '8px', // Add border-radius for rounded corners
+});
 
 const CharacterProfile = () => {
   const { id } = useParams();
@@ -40,16 +78,17 @@ const CharacterProfile = () => {
   return (
     <div>
       {character && origin && location && (
-        <Card>
+        <StyledCard>
           <CardContent>
-            <Typography variant="h5" component="h2">
-              {character.name}
-            </Typography>
-            <img
-              src={character.image}
-              alt={character.name}
-              style={{ maxHeight: '200px', maxWidth: '100%', marginBottom: '12px' }}
-            />
+          <CenteredContent>
+          <Typography variant="h3" component="h1" style={{ color: '#3f51b5', fontFamily: 'Arial, sans-serif' }}>
+          {character.name}
+      </Typography>
+            
+      <ImageWithBorder
+                src={character.image}
+                alt={character.name}
+              />
             <Typography variant="body2" color="textSecondary" component="p">
               Species: {character.species}
             </Typography>
@@ -58,13 +97,14 @@ const CharacterProfile = () => {
             </Typography>
             {/* Display episode names */}
             <Typography variant="h6" component="h3">
-              Episodes:
-            </Typography>
-            {episodes.map((episode, index) => (
-              <Typography variant="body2" color="textSecondary" component="p" key={index}>
-                {episode}
+                Episodes:
               </Typography>
-            ))}
+              <Box>
+                {episodes.map((episode, index) => (
+                  <EpisodeBox key={index}>{episode}</EpisodeBox>
+                ))}
+              </Box>
+
             {/* Display origin and location details */}
             <Typography variant="h6" component="h3">
               Origin:
@@ -85,8 +125,9 @@ const CharacterProfile = () => {
             <Typography variant="body2" color="textSecondary" component="p">
               Residents: {location.residents.length}
             </Typography>
+            </CenteredContent>
           </CardContent>
-        </Card>
+        </StyledCard>
       )}
       {error && (
         <Typography variant="body2" color="error" component="p">
@@ -98,4 +139,3 @@ const CharacterProfile = () => {
 };
 
 export default CharacterProfile;
-

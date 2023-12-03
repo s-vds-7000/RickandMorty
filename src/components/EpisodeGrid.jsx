@@ -1,7 +1,7 @@
-// EpisodesGrid.js (Updated for individual character display per episode)
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Grid, Card, CardContent, Typography, TextField, Button } from '@mui/material';
+import { Grid, Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const EpisodesGrid = () => {
   const [episodes, setEpisodes] = useState([]);
@@ -48,47 +48,72 @@ const EpisodesGrid = () => {
     setCharactersByEpisode({});
   };
 
+  // Function to render characters with styled boxes
+  const renderCharacters = (characters) => {
+    return (
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {characters.map((character, index) => (
+          <Box
+            key={index}
+            bgcolor="#757575"
+            color="#fff"
+            padding="8px 12px"
+            borderRadius="4px"
+            margin="4px"
+          >
+            {character.name}
+          </Box>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div>
-      <TextField
-        label="Search by Episode Name"
-        variant="outlined"
-        value={searchTerm}
-        onChange={handleSearch}
-        onKeyPress={(event) => {
-          if (event.key === 'Enter') {
-            handleSearchSubmit();
-          }
-        }}
-      />
+      <Typography variant="h2" align="center" style={{ margin: '20px 0' }}>
+        Episodes
+      </Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="20px">
+        <TextField
+          label="Search by Episode Name"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearch}
+          InputProps={{
+            endAdornment: (
+              <Button variant="contained" onClick={handleSearchSubmit}>
+                <SearchIcon />
+              </Button>
+            ),
+          }}
+        />
+      </Box>
       <Grid container spacing={3}>
         {episodes.map(episode => (
           <Grid item xs={12} sm={6} md={4} key={episode.id}>
             <Card>
               <CardContent>
-                <Typography variant="h5" component="h2">
+                <Typography variant="h5" component="h2" textAlign="center">
                   {episode.name}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" textAlign="center">
                   Episode: {episode.episode}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" textAlign="center">
                   Air Date: {episode.air_date}
                 </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center" p={2}>
                 <Button variant="contained" onClick={() => handleShowCharacters(episode)}>
                   Show Characters
                 </Button>
+                </Box>
                 {/* Display characters related to the episode */}
                 {charactersByEpisode[episode.id] && (
                   <div>
                     <Typography variant="h6" component="h3">
                       Characters in this Episode:
                     </Typography>
-                    {charactersByEpisode[episode.id].map((character, index) => (
-                      <Typography variant="body2" color="textSecondary" component="p" key={index}>
-                        {character.name}
-                      </Typography>
-                    ))}
+                    {renderCharacters(charactersByEpisode[episode.id])}
                     <Button variant="outlined" onClick={resetCharacters}>
                       Hide Characters
                     </Button>
