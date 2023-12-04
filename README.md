@@ -1,5 +1,7 @@
 # Rick and Morty (React + Vite)
 
+Deployed Link: https://rickand-morty-six.vercel.app/
+
 ![Assign2](https://github.com/s-vds-7000/RickandMorty/assets/94473575/83d32407-839b-4e9d-b76d-6394aa0f2695)
 
 ## Overview
